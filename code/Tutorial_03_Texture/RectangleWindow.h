@@ -56,6 +56,9 @@ private:
     // Texture
     QOpenGLTexture*             m_texture;
 
+    // uniform for texture
+    int                         m_texUniform{-1};
+
 	std::vector<float>			m_vertexBufferData;
 
 	// Stores the target colors that we animate towards

@@ -50,7 +50,7 @@ void RectangleWindow::initializeGL() {
 
     // set texture attributes
     // wrap style
-    m_texture->setWrapMode(QOpenGLTexture::WrapMode);
+    m_texture->setWrapMode(QOpenGLTexture::ClampToEdge);
     m_texture->setBorderColor(Qt::red);
 
     // texture filtering
@@ -81,29 +81,7 @@ void RectangleWindow::initializeGL() {
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
-
     float vertices[] = {
-         0.8f,  0.8f, 0.0f,  // top right
-         0.8f, -0.8f, 0.0f,  // bottom right
-        -0.8f, -0.8f, 0.0f,  // bottom left
-        -0.8f,  0.8f, 0.0f   // top left
-    };
-
-    float vertices2[] = {
-        0.8f,  0.8f, 0.0f,    1.0f, 1.0f, 1.0f, // top right
-        0.8f, -0.8f, 0.0f,    1.0f, 1.0f, 1.0f,   // bottom right
-        -0.8f, -0.8f, 0.0f,   1.0f, 1.0f, 1.0f,   // bottom left
-        -0.8f,  0.8f, 0.0f,   1.0f, 1.0f, 1.0f,    // top left
-    };
-
-//    float vertices3[] = {
-//        0.8f,  0.8f, 0.0f,    (float)m_vertexColors[0].redF(), (float)m_vertexColors[0].greenF(), (float)m_vertexColors[0].blueF(), // top right
-//        0.8f, -0.8f, 0.0f,    (float)m_vertexColors[1].redF(), (float)m_vertexColors[1].greenF(), (float)m_vertexColors[1].blueF(),   // bottom right
-//        -0.8f, -0.8f, 0.0f,   (float)m_vertexColors[2].redF(), (float)m_vertexColors[2].greenF(), (float)m_vertexColors[2].blueF(),   // bottom left
-//        -0.8f,  0.8f, 0.0f,   (float)m_vertexColors[3].redF(), (float)m_vertexColors[3].greenF(), (float)m_vertexColors[3].blueF()    // top left
-//    };
-
-    float vertices3[] = {
         0.8f,  0.8f, 0.0f,    1.0f, 1.0f, 1.0f,  1.0f, 1.0f, // top right
         0.8f, -0.8f, 0.0f,    1.0f, 1.0f, 1.0f,  1.0f, 0.0f, // bottom right
         -0.8f, -0.8f, 0.0f,   1.0f, 1.0f, 1.0f,  0.0f, 0.0f, // bottom left
@@ -114,7 +92,7 @@ void RectangleWindow::initializeGL() {
     //m_vertexBufferData.resize(2*4*3);
     m_vertexBufferData.resize(8*4);
 
-    m_vertexBufferData.insert(m_vertexBufferData.begin(), &vertices3[0], &vertices3[8*4]);
+    m_vertexBufferData.insert(m_vertexBufferData.begin(), &vertices[0], &vertices[8*4]);
 
 
     // Using a for loop with index
@@ -165,6 +143,14 @@ void RectangleWindow::initializeGL() {
     m_program->enableAttributeArray(2);
     int texCoordsOffset = colorOffset+(3*sizeof(float));
     m_program->setAttributeBuffer(2, GL_FLOAT, texCoordsOffset, 2, stride);
+
+    m_texUniform = m_program->uniformLocation("texture");
+
+    m_texture->bind();
+    m_program->bind();
+    m_program->setUniformValue(m_texUniform, 0);
+
+
 }
 
 
